@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /admin_password.html
+Disallow: /deletefiles.html
+
+Sitemap: https://notaryservices.work/sitemap.xml

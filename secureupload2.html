@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Upload — Corzo Notary</title>
+    <link rel="icon" href="notary_logo.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="index.html" class="logo">
+                <img src="notary_logo.svg" alt="Corzo Notary" class="logo-img">
+                <span>Corzo Notary</span>
+            </a>
+            <nav class="main-nav">
+                <button class="nav-toggle" aria-label="Toggle menu" onclick="document.querySelector('.nav-links').classList.toggle('open')">
+                    <span></span><span></span><span></span>
+                </button>
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="pricing.html">Pricing</a></li>
+                    <li><a href="forms.html">Forms</a></li>
+                    <li><a href="faq.html">FAQ</a></li>
+                    <li><a href="instructions.html">How It Works</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="upload_choice.html" class="btn-nav">Upload Documents</a></li>
+                    <li><a href="index_es.html" class="lang-switch">Español</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="page-hero">
+        <h1>Secure Document Upload</h1>
+        <p>Your documents are encrypted and password-protected</p>
+    </section>
+
+    <section>
+        <div class="container">
+            <div class="upload-container">
+                <h2>Upload Your Documents</h2>
+                <form class="upload-form" id="uploadForm" enctype="multipart/form-data">
+                    <label for="uploaderName">Your Name</label>
+                    <input type="text" id="uploaderName" name="uploaderName" required>
+
+                    <label for="uploadPassword">Access Password</label>
+                    <input type="password" id="uploadPassword" name="uploadPassword" required placeholder="Enter the password provided to you">
+
+                    <label for="fileInput">Select Document(s)</label>
+                    <input type="file" id="fileInput" name="file" required>
+
+                    <button type="submit" id="submitBtn">Upload Securely</button>
+                    <p class="form-note">Maximum file size: 50MB. Accepted formats: PDF, JPG, PNG, DOC, DOCX.</p>
+                    <div class="error-msg" id="errorMsg"></div>
+                    <div class="success-msg" id="successMsg"></div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>Corzo Notary</h4>
+                    <p>Professional mobile notary services you can trust.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="pricing.html">Pricing</a></li>
+                        <li><a href="forms.html">Forms</a></li>
+                        <li><a href="faq.html">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="instructions.html">How It Works</a></li>
+                        <li><a href="upload_choice.html">Upload Documents</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Corzo Notary. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="upload.js"></script>
+</body>
+</html>

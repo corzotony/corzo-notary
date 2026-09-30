@@ -4,8 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contacto — Corzo Notary</title>
-    <link rel="icon" href="notary_logo.svg" type="image/svg+xml">
+    <link rel="icon" href="notary_logo.png" type="image/svg+xml">
     <link rel="stylesheet" href="style.css">
+    <style>
+        .form-status {
+            display: none;
+            margin-top: 16px;
+            padding: 12px 14px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+
+        .form-status.success {
+            display: block;
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .form-status.error {
+            display: block;
+            background: #f8d7da;
+            color: #842029;
+            border: 1px solid #f5c2c7;
+        }
+    </style>
 </head>
 <body>
     <header class="site-header">
@@ -48,8 +71,8 @@
             <div class="contact-grid">
                 <div class="contact-info">
                     <h3>Póngase en Contacto</h3>
-                    <p><strong>Teléfono:</strong> (555) 123-4567</p>
-                    <p><strong>Correo:</strong> corzotony@yahoo.com</p>
+                    <p><strong>Teléfono:</strong> (848) 327-0607</p>
+                    <p><strong>Correo:</strong> corzo.notary@outlook.com</p>
                     <p><strong>Horario:</strong> Lun–Vie 8am–7pm, Sáb 9am–5pm</p>
                     <p><strong>Área de Servicio:</strong> Viajamos a su ubicación dentro del área metropolitana.</p>
                     <h3 style="margin-top: 24px;">Qué Incluir</h3>
@@ -59,7 +82,12 @@
                     <p>Número de firmas necesarias</p>
                 </div>
                 <div class="contact-form">
-                    <form action="https://api.notaryservices.work/contact" method="POST">
+                    <form id="contactForm" action="https://api.web3forms.com/submit" method="POST">
+                        <input type="hidden" name="access_key" value="ba22b4a8-e21f-40e2-bb8c-28a885e3cfe0">
+                        <input type="hidden" name="subject" value="New Notary Service Request">
+                        <input type="hidden" name="from_name" value="Corzo Notary Website">
+                        <input type="checkbox" name="botcheck" class="hidden" style="display: none;">
+
                         <label for="name">Nombre Completo</label>
                         <input type="text" id="name" name="name" required>
 
@@ -71,10 +99,10 @@
 
                         <label for="service">Servicio Necesario</label>
                         <select id="service" name="service">
-                            <option value="general">Notarización General</option>
-                            <option value="loan">Firma de Préstamo</option>
-                            <option value="apostille">Asistencia con Apostilla</option>
-                            <option value="other">Otro</option>
+                            <option value="Notarización General">Notarización General</option>
+                            <option value="Firma de Préstamo">Firma de Préstamo</option>
+                            <option value="Asistencia con Apostilla">Asistencia con Apostilla</option>
+                            <option value="Otro">Otro</option>
                         </select>
 
                         <label for="message">Mensaje</label>
@@ -82,6 +110,8 @@
 
                         <button type="submit">Enviar Mensaje</button>
                     </form>
+
+                    <div id="formStatus" class="form-status" aria-live="polite"></div>
                 </div>
             </div>
         </div>
@@ -120,5 +150,40 @@
             </div>
         </div>
     </footer>
+
+    <script>
+        const form = document.getElementById('contactForm');
+        const statusBox = document.getElementById('formStatus');
+
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            statusBox.className = 'form-status';
+            statusBox.textContent = 'Enviando su mensaje...';
+
+            fetch(form.action, {
+                method: 'POST',
+                body: new FormData(form),
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    statusBox.classList.add('success');
+                    statusBox.textContent = '¡Gracias! Su mensaje fue enviado con éxito. Le responderemos dentro de las 2 horas durante el horario comercial.';
+                    form.reset();
+                } else {
+                    statusBox.classList.add('error');
+                    statusBox.textContent = 'Hubo un problema al enviar su mensaje. Inténtelo de nuevo o contáctenos directamente a corzo.notary@outlook.com.';
+                }
+            })
+            .catch(() => {
+                statusBox.classList.add('error');
+                statusBox.textContent = 'Hubo un problema al enviar su mensaje. Inténtelo de nuevo o contáctenos directamente a corzo.notary@outlook.com.';
+            });
+        });
+    </script>
 </body>
 </html>

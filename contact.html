@@ -82,11 +82,11 @@
                     <p>Number of signatures needed</p>
                 </div>
                 <div class="contact-form">
-                    <form id="contactForm" action="https://formsubmit.co/ajax/corzo.notary@outlook.com" method="POST">
-                        <input type="hidden" name="_subject" value="New Notary Service Request">
-                        <input type="hidden" name="_template" value="table">
-                        <input type="hidden" name="_captcha" value="false">
-                        <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+                    <form id="contactForm" action="https://api.web3forms.com/submit" method="POST">
+                        <input type="hidden" name="access_key" value="ba22b4a8-e21f-40e2-bb8c-28a885e3cfe0">
+                        <input type="hidden" name="subject" value="New Notary Service Request">
+                        <input type="hidden" name="from_name" value="Corzo Notary Website">
+                        <input type="checkbox" name="botcheck" class="hidden" style="display: none;">
 
                         <label for="name">Full Name</label>
                         <input type="text" id="name" name="name" required>

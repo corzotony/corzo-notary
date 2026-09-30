@@ -6,20 +6,6 @@
     <title>Contact — Corzo Notary</title>
     <link rel="icon" href="notary_logo.svg" type="image/svg+xml">
     <link rel="stylesheet" href="style.css">
-    <style>
-        .form-success {
-            display: none;
-            background-color: #d4edda;
-            color: #155724;
-            padding: 16px;
-            border-radius: 4px;
-            margin-bottom: 16px;
-            border: 1px solid #c3e6cb;
-        }
-        .form-success.show {
-            display: block;
-        }
-    </style>
 </head>
 <body>
     <header class="site-header">
@@ -67,10 +53,12 @@
                     <p>Number of signatures needed</p>
                 </div>
                 <div class="contact-form">
-                    <div class="form-success" id="successMessage">
-                        ✓ Thank you! Your message has been sent. We'll respond within 2 hours during business hours.
-                    </div>
-                    <form id="contactForm">
+                    <form action="https://formsubmit.co/corzo.notary@outlook.com" method="POST">
+                        <input type="hidden" name="_subject" value="New Notary Service Request">
+                        <input type="hidden" name="_template" value="table">
+                        <input type="hidden" name="_next" value="https://notaryservices.work/contact.html?sent=1">
+                        <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+
                         <label for="name">Full Name</label>
                         <input type="text" id="name" name="name" required>
 
@@ -82,10 +70,10 @@
 
                         <label for="service">Service Needed</label>
                         <select id="service" name="service">
-                            <option value="general">General Notarization</option>
-                            <option value="loan">Loan Signing</option>
-                            <option value="apostille">Apostille Assistance</option>
-                            <option value="other">Other</option>
+                            <option value="General Notarization">General Notarization</option>
+                            <option value="Loan Signing">Loan Signing</option>
+                            <option value="Apostille Assistance">Apostille Assistance</option>
+                            <option value="Other">Other</option>
                         </select>
 
                         <label for="message">Message</label>
@@ -93,6 +81,7 @@
 
                         <button type="submit">Send Message</button>
                     </form>
+                    <p id="sentMessage" style="display: none; color: #155724; background: #d4edda; padding: 12px; margin-top: 16px; border-radius: 4px;">Thank you! Your message was sent successfully. We'll respond within 2 hours during business hours.</p>
                 </div>
             </div>
         </div>
@@ -130,39 +119,9 @@
     </footer>
 
     <script>
-        document.getElementById('contactForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const phone = document.getElementById('phone').value;
-            const service = document.getElementById('service').value;
-            const message = document.getElementById('message').value;
-
-            // Format the email body
-            const emailBody = `Name: ${name}
-Email: ${email}
-Phone: ${phone}
-Service Needed: ${service}
-Message: ${message}`;
-
-            // Create mailto link
-            const mailtoLink = `mailto:corzo.notary@outlook.com?subject=Notary Service Request from ${encodeURIComponent(name)}&body=${encodeURIComponent(emailBody)}`;
-
-            // Open email client
-            window.location.href = mailtoLink;
-
-            // Show success message
-            document.getElementById('successMessage').classList.add('show');
-            
-            // Reset form
-            this.reset();
-
-            // Hide success message after 5 seconds
-            setTimeout(() => {
-                document.getElementById('successMessage').classList.remove('show');
-            }, 5000);
-        });
+        if (new URLSearchParams(window.location.search).get('sent') === '1') {
+            document.getElementById('sentMessage').style.display = 'block';
+        }
     </script>
 </body>
 </html>

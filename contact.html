@@ -6,6 +6,29 @@
     <title>Contact — Corzo Notary</title>
     <link rel="icon" href="notary_logo.svg" type="image/svg+xml">
     <link rel="stylesheet" href="style.css">
+    <style>
+        .form-status {
+            display: none;
+            margin-top: 16px;
+            padding: 12px 14px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+
+        .form-status.success {
+            display: block;
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .form-status.error {
+            display: block;
+            background: #f8d7da;
+            color: #842029;
+            border: 1px solid #f5c2c7;
+        }
+    </style>
 </head>
 <body>
     <header class="site-header">
@@ -53,10 +76,10 @@
                     <p>Number of signatures needed</p>
                 </div>
                 <div class="contact-form">
-                    <form action="https://formsubmit.co/corzo.notary@outlook.com" method="POST">
+                    <form id="contactForm" action="https://formsubmit.co/ajax/corzo.notary@outlook.com" method="POST">
                         <input type="hidden" name="_subject" value="New Notary Service Request">
                         <input type="hidden" name="_template" value="table">
-                        <input type="hidden" name="_next" value="https://notaryservices.work/contact.html?sent=1">
+                        <input type="hidden" name="_captcha" value="false">
                         <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
 
                         <label for="name">Full Name</label>
@@ -81,7 +104,8 @@
 
                         <button type="submit">Send Message</button>
                     </form>
-                    <p id="sentMessage" style="display: none; color: #155724; background: #d4edda; padding: 12px; margin-top: 16px; border-radius: 4px;">Thank you! Your message was sent successfully. We'll respond within 2 hours during business hours.</p>
+
+                    <div id="formStatus" class="form-status" aria-live="polite"></div>
                 </div>
             </div>
         </div>
@@ -119,9 +143,38 @@
     </footer>
 
     <script>
-        if (new URLSearchParams(window.location.search).get('sent') === '1') {
-            document.getElementById('sentMessage').style.display = 'block';
-        }
+        const form = document.getElementById('contactForm');
+        const statusBox = document.getElementById('formStatus');
+
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            statusBox.className = 'form-status';
+            statusBox.textContent = 'Sending your message...';
+
+            fetch(form.action, {
+                method: 'POST',
+                body: new FormData(form),
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    statusBox.classList.add('success');
+                    statusBox.textContent = 'Thank you! Your message was sent successfully. We will respond within 2 hours during business hours.';
+                    form.reset();
+                } else {
+                    statusBox.classList.add('error');
+                    statusBox.textContent = 'There was a problem sending your message. Please try again or contact us directly at corzo.notary@outlook.com.';
+                }
+            })
+            .catch(() => {
+                statusBox.classList.add('error');
+                statusBox.textContent = 'There was a problem sending your message. Please try again or contact us directly at corzo.notary@outlook.com.';
+            });
+        });
     </script>
 </body>
 </html>

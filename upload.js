@@ -1,71 +1,107 @@
 // Upload handler for Corzo Notary
-// Sends file to the Worker API at api.notaryservices.work
+// Accepts file uploads with password check, stores in R2, sends email notification
 
-const API_URL = 'https://api.notaryservices.work';
+const UPLOAD_PASSWORD = 'TCWPZFNA';
+const RECIPIENT_EMAIL = 'corzo.notary@outlook.com';
 
-document.getElementById('uploadForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type',
+};
 
-    const submitBtn = document.getElementById('submitBtn');
-    const errorMsg = document.getElementById('errorMsg');
-    const successMsg = document.getElementById('successMsg');
-    const fileInput = document.getElementById('fileInput');
-    const nameInput = document.getElementById('uploaderName');
-    const passwordInput = document.getElementById('uploadPassword');
-
-    // Hide previous messages
-    errorMsg.style.display = 'none';
-    successMsg.style.display = 'none';
-
-    // Validate
-    if (!fileInput.files || fileInput.files.length === 0) {
-        errorMsg.textContent = 'Please select a file to upload.';
-        errorMsg.style.display = 'block';
-        return;
+export default {
+  async fetch(request, env) {
+    // Handle CORS preflight
+    if (request.method === 'OPTIONS') {
+      return new Response(null, { headers: corsHeaders });
     }
 
-    const file = fileInput.files[0];
-    const maxSize = 50 * 1024 * 1024; // 50MB
-    if (file.size > maxSize) {
-        errorMsg.textContent = 'File is too large. Maximum size is 50MB.';
-        errorMsg.style.display = 'block';
-        return;
+    if (request.method !== 'POST') {
+      return new Response('Method not allowed', {
+        status: 405,
+        headers: { 'Content-Type': 'text/plain', ...corsHeaders },
+      });
     }
-
-    // Build form data
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('uploaderName', nameInput.value);
-    formData.append('password', passwordInput.value);
-
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Uploading...';
 
     try {
-        const response = await fetch(API_URL, {
-            method: 'POST',
-            body: formData
-        });
+      const formData = await request.formData();
 
-        if (response.ok) {
-            successMsg.textContent = 'Document uploaded successfully! We will contact you shortly.';
-            successMsg.style.display = 'block';
-            // Reset form
-            document.getElementById('uploadForm').reset();
-            // Redirect to success page after 2 seconds
-            setTimeout(() => {
-                window.location.href = 'success.html';
-            }, 2000);
-        } else {
-            const errorText = await response.text();
-            errorMsg.textContent = 'Upload failed: ' + (errorText || 'Please check your password and try again.');
-            errorMsg.style.display = 'block';
-        }
+      // Password check
+      const password = formData.get('password');
+      if (password !== UPLOAD_PASSWORD) {
+        return new Response('Invalid password. Please check and try again.', {
+          status: 403,
+          headers: { 'Content-Type': 'text/plain', ...corsHeaders },
+        });
+      }
+
+      // Get file
+      const file = formData.get('file');
+      if (!file) {
+        return new Response('No file provided.', {
+          status: 400,
+          headers: { 'Content-Type': 'text/plain', ...corsHeaders },
+        });
+      }
+
+      // Client info - name required, email and phone optional
+      const clientName = formData.get('uploaderName') || formData.get('clientname') || 'Unknown_Client';
+      const clientEmail = formData.get('clientemail') || formData.get('uploaderEmail') || 'Not provided';
+      const clientPhone = formData.get('clientphone') || formData.get('uploaderPhone') || 'Not provided';
+
+      // Sanitize client name for storage path
+      const sanitizedName = clientName.replace(/[^a-zA-Z0-9]/g, '_');
+      const timestamp = Date.now();
+      const fileName = file.name;
+      const key = 'uploads/' + sanitizedName + '_' + timestamp + '/' + fileName;
+
+      // Upload to R2
+      await env.UPLOAD_BUCKET.put(key, file, {
+        customMetadata: {
+          clientName: clientName,
+          clientEmail: clientEmail,
+          clientPhone: clientPhone,
+          uploadedAt: new Date().toISOString(),
+        },
+      });
+
+      // Send email notification via Resend
+      try {
+        await fetch('https://api.resend.com/emails', {
+          method: 'POST',
+          headers: {
+            'Authorization': 'Bearer ' + env.RESEND_API_KEY,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            from: 'Corzo Notary <corzo.notary@outlook.com>',
+            to: [RECIPIENT_EMAIL],
+            subject: 'New Document Upload from ' + clientName,
+            html: '<h2>New Document Upload</h2>' +
+              '<p><strong>Client Name:</strong> ' + clientName + '</p>' +
+              '<p><strong>Email:</strong> ' + clientEmail + '</p>' +
+              '<p><strong>Phone:</strong> ' + clientPhone + '</p>' +
+              '<p><strong>File:</strong> ' + fileName + '</p>' +
+              '<p><strong>Uploaded at:</strong> ' + new Date().toISOString() + '</p>' +
+              '<p><strong>Storage path:</strong> ' + key + '</p>',
+          }),
+        });
+      } catch (emailErr) {
+        console.error('Email notification failed: ' + emailErr.message);
+      }
+
+      // Return plain text success (compatible with frontend's response.ok check)
+      return new Response('Document uploaded successfully', {
+        status: 200,
+        headers: { 'Content-Type': 'text/plain', ...corsHeaders },
+      });
+
     } catch (err) {
-        errorMsg.textContent = 'Network error. Please check your connection and try again.';
-        errorMsg.style.display = 'block';
-    } finally {
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Upload Securely';
+      return new Response('Upload failed: ' + err.message, {
+        status: 500,
+        headers: { 'Content-Type': 'text/plain', ...corsHeaders },
+      });
     }
-});
+  },
+};

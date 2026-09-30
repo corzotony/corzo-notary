@@ -6,6 +6,20 @@
     <title>Contact — Corzo Notary</title>
     <link rel="icon" href="notary_logo.svg" type="image/svg+xml">
     <link rel="stylesheet" href="style.css">
+    <style>
+        .form-success {
+            display: none;
+            background-color: #d4edda;
+            color: #155724;
+            padding: 16px;
+            border-radius: 4px;
+            margin-bottom: 16px;
+            border: 1px solid #c3e6cb;
+        }
+        .form-success.show {
+            display: block;
+        }
+    </style>
 </head>
 <body>
     <header class="site-header">
@@ -53,7 +67,10 @@
                     <p>Number of signatures needed</p>
                 </div>
                 <div class="contact-form">
-                    <form action="https://api.notaryservices.work/contact" method="POST">
+                    <div class="form-success" id="successMessage">
+                        ✓ Thank you! Your message has been sent. We'll respond within 2 hours during business hours.
+                    </div>
+                    <form id="contactForm">
                         <label for="name">Full Name</label>
                         <input type="text" id="name" name="name" required>
 
@@ -111,5 +128,41 @@
             </div>
         </div>
     </footer>
+
+    <script>
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const service = document.getElementById('service').value;
+            const message = document.getElementById('message').value;
+
+            // Format the email body
+            const emailBody = `Name: ${name}
+Email: ${email}
+Phone: ${phone}
+Service Needed: ${service}
+Message: ${message}`;
+
+            // Create mailto link
+            const mailtoLink = `mailto:corzo.notary@outlook.com?subject=Notary Service Request from ${encodeURIComponent(name)}&body=${encodeURIComponent(emailBody)}`;
+
+            // Open email client
+            window.location.href = mailtoLink;
+
+            // Show success message
+            document.getElementById('successMessage').classList.add('show');
+            
+            // Reset form
+            this.reset();
+
+            // Hide success message after 5 seconds
+            setTimeout(() => {
+                document.getElementById('successMessage').classList.remove('show');
+            }, 5000);
+        });
+    </script>
 </body>
 </html>

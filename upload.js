@@ -56,8 +56,11 @@ export default {
       const fileName = file.name;
       const key = 'uploads/' + sanitizedName + '_' + timestamp + '/' + fileName;
 
+      // Convert file to ArrayBuffer for R2 upload
+      const fileBuffer = await file.arrayBuffer();
+
       // Upload to R2
-      await env.UPLOAD_BUCKET.put(key, file, {
+      await env.UPLOAD_BUCKET.put(key, fileBuffer, {
         customMetadata: {
           clientName: clientName,
           clientEmail: clientEmail,

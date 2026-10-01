@@ -27,8 +27,8 @@ export default {
     try {
       const formData = await request.formData();
 
-      // Password check
-      const password = formData.get('password');
+      // Password check - accept both 'password' and 'uploadPassword' field names
+      const password = formData.get('password') || formData.get('uploadPassword');
       if (password !== UPLOAD_PASSWORD) {
         return new Response('Invalid password. Please check and try again.', {
           status: 403,
@@ -47,8 +47,8 @@ export default {
 
       // Client info - name required, email and phone optional
       const clientName = formData.get('uploaderName') || formData.get('clientname') || 'Unknown_Client';
-      const clientEmail = formData.get('clientemail') || formData.get('uploaderEmail') || 'Not provided';
-      const clientPhone = formData.get('clientphone') || formData.get('uploaderPhone') || 'Not provided';
+      const clientEmail = formData.get('uploaderEmail') || formData.get('clientemail') || 'Not provided';
+      const clientPhone = formData.get('uploaderPhone') || formData.get('clientphone') || 'Not provided';
 
       // Sanitize client name for storage path
       const sanitizedName = clientName.replace(/[^a-zA-Z0-9]/g, '_');

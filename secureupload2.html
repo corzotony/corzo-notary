@@ -122,9 +122,9 @@
             });
 
             if (response.ok) {
-                successMsg.textContent = 'Success! Your document has been uploaded securely.';
-                successMsg.style.display = 'block';
-                document.getElementById('uploadForm').reset();
+    window.location.href = 'success.html';
+
+
             } else {
                 const errorText = await response.text();
                 errorMsg.textContent = errorText || 'Upload failed. Please try again.';

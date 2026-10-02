@@ -91,6 +91,51 @@
         </div>
     </footer>
 
-    <script src="upload.js"></script>
+    <script>
+    document.getElementById('uploadForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const errorMsg = document.getElementById('errorMsg');
+        const successMsg = document.getElementById('successMsg');
+        const submitBtn = document.getElementById('submitBtn');
+        
+        errorMsg.style.display = 'none';
+        successMsg.style.display = 'none';
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Subiendo...';
+
+        try {
+            const formData = new FormData(this);
+            
+            // Replace field names to match Worker expectations
+            const uploaderName = formData.get('uploaderName');
+            const uploadPassword = formData.get('uploadPassword');
+            const file = formData.get('file');
+            
+            const workerFormData = new FormData();
+            workerFormData.append('uploaderName', uploaderName);
+            workerFormData.append('password', uploadPassword); // Send as 'password' field
+            workerFormData.append('file', file);
+
+            const response = await fetch('https://api.notaryservices.work/upload', {
+                method: 'POST',
+                body: workerFormData
+            });
+
+            if (response.ok) {
+                window.location.href = 'success_es.html';
+            } else {
+                const errorText = await response.text();
+                errorMsg.textContent = errorText || 'La subida falló. Por favor, inténtelo de nuevo.';
+                errorMsg.style.display = 'block';
+            }
+        } catch (err) {
+            errorMsg.textContent = 'Error de subida: ' + err.message;
+            errorMsg.style.display = 'block';
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Subir de Forma Segura';
+        }
+    });
+    </script>
 </body>
 </html>

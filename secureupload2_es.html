@@ -45,6 +45,10 @@
                     <label for="uploaderName">Su Nombre</label>
                     <input type="text" id="uploaderName" name="uploaderName" required>
 
+                    <label for="clientemail">Su Correo Electrónico</label>
+                    <input type="email" id="clientemail" name="clientemail" required placeholder="Ingrese su correo electrónico">
+                    <p class="form-note">Su correo electrónico se utiliza para recuperar sus documentos de forma segura más adelante.</p>
+
                     <label for="uploadPassword">Contraseña de Acceso</label>
                     <input type="password" id="uploadPassword" name="uploadPassword" required placeholder="Ingrese la contraseña proporcionada">
 
@@ -56,6 +60,7 @@
                     <div class="error-msg" id="errorMsg"></div>
                     <div class="success-msg" id="successMsg"></div>
                 </form>
+                <p style="text-align:center; margin-top:20px;"><a href="mydocuments_es.html">¿Ya subió documentos? Ver Mis Documentos &rarr;</a></p>
             </div>
         </div>
     </section>
@@ -109,10 +114,12 @@
             // Replace field names to match Worker expectations
             const uploaderName = formData.get('uploaderName');
             const uploadPassword = formData.get('uploadPassword');
+            const clientemail = formData.get('clientemail');
             const file = formData.get('file');
             
             const workerFormData = new FormData();
             workerFormData.append('uploaderName', uploaderName);
+            workerFormData.append('clientemail', clientemail);
             workerFormData.append('password', uploadPassword); // Send as 'password' field
             workerFormData.append('file', file);
 

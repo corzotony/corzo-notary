@@ -45,6 +45,10 @@
                     <label for="uploaderName">Your Name</label>
                     <input type="text" id="uploaderName" name="uploaderName" required>
 
+                    <label for="clientemail">Your Email</label>
+                    <input type="email" id="clientemail" name="clientemail" required placeholder="Enter your email address">
+                    <p class="form-note">Your email is used to securely retrieve your documents later.</p>
+
                     <label for="uploadPassword">Access Password</label>
                     <input type="password" id="uploadPassword" name="uploadPassword" required placeholder="Enter the password provided to you">
 
@@ -56,6 +60,7 @@
                     <div class="error-msg" id="errorMsg"></div>
                     <div class="success-msg" id="successMsg"></div>
                 </form>
+                <p style="text-align:center; margin-top:20px;"><a href="mydocuments.html">Already uploaded? View My Documents &rarr;</a></p>
             </div>
         </div>
     </section>
@@ -109,10 +114,12 @@
             // Replace field names to match Worker expectations
             const uploaderName = formData.get('uploaderName');
             const uploadPassword = formData.get('uploadPassword');
+            const clientemail = formData.get('clientemail');
             const file = formData.get('file');
             
             const workerFormData = new FormData();
             workerFormData.append('uploaderName', uploaderName);
+            workerFormData.append('clientemail', clientemail);
             workerFormData.append('password', uploadPassword); // Send as 'password' field
             workerFormData.append('file', file);
 
@@ -122,9 +129,7 @@
             });
 
             if (response.ok) {
-    window.location.href = 'success.html';
-
-
+                window.location.href = 'success.html';
             } else {
                 const errorText = await response.text();
                 errorMsg.textContent = errorText || 'Upload failed. Please try again.';

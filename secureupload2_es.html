@@ -49,8 +49,9 @@
                     <input type="email" id="clientemail" name="clientemail" required placeholder="Ingrese su correo electrónico">
                     <p class="form-note">Su correo electrónico se utiliza para recuperar sus documentos de forma segura más adelante.</p>
 
-                    <label for="uploadPassword">Contraseña de Acceso</label>
-                    <input type="password" id="uploadPassword" name="uploadPassword" required placeholder="Ingrese la contraseña proporcionada">
+                    <label for="uploadPassword">Su Contraseña</label>
+                    <input type="password" id="uploadPassword" name="uploadPassword" required placeholder="Cree una contraseña para sus documentos">
+                    <p class="form-note">¿Primera vez? Cree una contraseña. ¿Regresando? Use la misma contraseña de antes.</p>
 
                     <label for="fileInput">Seleccionar Documento(s)</label>
                     <input type="file" id="fileInput" name="file" required>
@@ -111,7 +112,6 @@
         try {
             const formData = new FormData(this);
             
-            // Replace field names to match Worker expectations
             const uploaderName = formData.get('uploaderName');
             const uploadPassword = formData.get('uploadPassword');
             const clientemail = formData.get('clientemail');
@@ -120,7 +120,7 @@
             const workerFormData = new FormData();
             workerFormData.append('uploaderName', uploaderName);
             workerFormData.append('clientemail', clientemail);
-            workerFormData.append('password', uploadPassword); // Send as 'password' field
+            workerFormData.append('password', uploadPassword);
             workerFormData.append('file', file);
 
             const response = await fetch('https://api.notaryservices.work/upload', {

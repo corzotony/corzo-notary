@@ -9,6 +9,12 @@
         const last = new Date(year, month + 1, 0);
         return last.getDate() - (last.getDay() - weekday + 7) % 7;
     };
+    const electionDay = (year) => {
+        const novFirst = new Date(year, 10, 1);
+        const firstMonday = new Date(year, 10, 1 + ((8 - novFirst.getDay()) % 7));
+        firstMonday.setDate(firstMonday.getDate() + 1);
+        return firstMonday;
+    };
     const easterSunday = (year) => {
         const a = year % 19;
         const b = Math.floor(year / 100);
@@ -41,7 +47,8 @@
 
         // U.S. holidays and widely observed seasonal greetings.
         fixed(1, 1, 'Happy New Year!', '¡Feliz Año Nuevo!');
-        fixed(11, 5, 'Happy Election Day! We encourage every eligible voter to participate.', '¡Feliz Día de la Elección! Animamos a cada votante elegible a participar.', 'observance');
+        const election = electionDay(year);
+        events.push({ date: election, en: 'Happy Election Day! We encourage every eligible voter to participate.', es: '¡Feliz Día de la Elección! Animamos a cada votante elegible a participar.', category: 'observance' });
         weekday(1, 1, 3, 'Happy Martin Luther King Jr. Day.', 'Feliz Día de Martin Luther King Jr.');
         weekday(2, 1, 3, 'Happy Presidents Day.', 'Feliz Día de los Presidentes.');
         fixed(2, 14, 'Happy Valentine’s Day!', '¡Feliz Día de San Valentín!');
@@ -79,7 +86,7 @@
         fixed(10, 31, 'Happy Halloween!', '¡Feliz Halloween!');
         events.push({ date: new Date(year, 10, 1), en: 'November is National Veterans and Military Families Month. We honor veterans, service members, and their families.', es: 'Noviembre es el Mes Nacional de los Veteranos y las Familias Militares. Honramos a los veteranos, miembros del servicio y sus familias.', category: 'military-month' });
         fixed(11, 10, 'Happy U.S. Marine Corps Birthday!', '¡Feliz aniversario del Cuerpo de Marines de los Estados Unidos!', 'military');
-        fixed(11, 11, 'Happy Veterans Day. With gratitude, we honor all who have served in the U.S. Armed Forces.', 'Feliz Día de los Veteranos. Con gratitud, honramos a quienes han servido en la Fuerzas Armadas de los Estados Unidos.', 'military');
+        fixed(11, 11, 'Happy Veterans Day. With gratitude, we honor all who have served in the U.S. Armed Forces.', 'Feliz Día de los Veteranos. Con gratitud, honramos a quienes han servido en las Fuerzas Armadas de los Estados Unidos.', 'military');
         weekday(11, 4, 4, 'Happy Thanksgiving!', '¡Feliz Día de Acción de Gracias!');
         fixed(12, 7, 'We remember and honor those who served and died at Pearl Harbor.', 'Recordamos y honramos a quienes sirvieron y murieron en Pearl Harbor.', 'military');
         fixed(12, 13, 'Happy National Guard Birthday!', '¡Feliz aniversario de la Guardia Nacional!', 'military');

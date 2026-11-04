@@ -33,6 +33,35 @@
         return new Date(year, month - 1, day);
     };
 
+    const curatedTodayInHistory = [
+        { month: 1, day: 1, en: 'Today in history: New Year’s Day is a time for fresh beginnings and gratitude for the year ahead.', es: 'Hoy en la historia: el Año Nuevo es un momento para nuevos comienzos y gratitud por el año que comienza.' },
+        { month: 1, day: 1, en: 'Happy New Year!', es: '¡Feliz Año Nuevo!' },
+        { month: 2, day: 3, en: 'Today in history: The Four Chaplains were honored for their sacrifice during World War II.', es: 'Hoy en la historia: se honra el sacrificio de los Cuatro Capellanes durante la Segunda Guerra Mundial.' },
+        { month: 3, day: 29, en: 'Today in history: National Vietnam War Veterans Day honors the service of those who fought in Vietnam.', es: 'Hoy en la historia: el Día Nacional de los Veteranos de la Guerra de Vietnam honra el servicio de quienes lucharon en Vietnam.' },
+        { month: 4, day: 1, en: 'Today in history: April is the Month of the Military Child, honoring military children and families.', es: 'Hoy en la historia: abril es el Mes del Niño Militar, en honor a los niños y familias militares.' },
+        { month: 5, day: 1, en: 'Today in history: Military Appreciation Month begins, recognizing those who serve and their families.', es: 'Hoy en la historia: comienza el Mes de Agradecimiento a las Fuerzas Armadas, reconociendo a quienes sirven y a sus familias.' },
+        { month: 5, day: 25, en: 'Today in history: Memorial Day is observed to honor those who gave their lives in service to our country.', es: 'Hoy en la historia: el Día de los Caídos se observa para honrar a quienes dieron su vida al servicio de nuestro país.' },
+        { month: 6, day: 6, en: 'Today in history: D-Day marked the Allied invasion of Normandy in 1944.', es: 'Hoy en la historia: el Día D marcó la invasión aliada de Normandía en 1944.' },
+        { month: 6, day: 14, en: 'Today in history: The U.S. Army was established in 1775 and Flag Day is observed.', es: 'Hoy en la historia: el Ejército de los Estados Unidos se estableció en 1775 y se observa el Día de la Bandera.' },
+        { month: 7, day: 4, en: 'Today in history: The Declaration of Independence was adopted in 1776.', es: 'Hoy en la historia: la Declaración de Independencia fue adoptada en 1776.' },
+        { month: 7, day: 27, en: 'Today in history: The Korean War armistice was signed in 1953.', es: 'Hoy en la historia: se firmó el armisticio de la Guerra de Corea en 1953.' },
+        { month: 8, day: 4, en: 'Today in history: The U.S. Coast Guard was founded in 1790.', es: 'Hoy en la historia: la Guardia Costera de los Estados Unidos se fundó en 1790.' },
+        { month: 8, day: 7, en: 'Today in history: Purple Heart Day honors recipients of the Purple Heart medal.', es: 'Hoy en la historia: el Día del Corazón Púrpura honra a los receptores de la medalla del Corazón Púrpura.' },
+        { month: 9, day: 11, en: 'Today in history: Patriot Day honors the lives lost and the courage shown on September 11, 2001.', es: 'Hoy en la historia: el Día del Patriota honra las vidas perdidas y el valor mostrado el 11 de septiembre de 2001.' },
+        { month: 9, day: 18, en: 'Today in history: The U.S. Air Force was established in 1947.', es: 'Hoy en la historia: la Fuerza Aérea de los Estados Unidos se estableció en 1947.' },
+        { month: 10, day: 13, en: 'Today in history: The U.S. Navy was established in 1775.', es: 'Hoy en la historia: la Armada de los Estados Unidos se estableció en 1775.' },
+        { month: 11, day: 10, en: 'Today in history: The U.S. Marine Corps was founded in 1775.', es: 'Hoy en la historia: el Cuerpo de Marines de los Estados Unidos se fundó en 1775.' },
+        { month: 11, day: 11, en: 'Today in history: Veterans Day honors all who have served in the U.S. Armed Forces.', es: 'Hoy en la historia: el Día de los Veteranos honra a todos los que han servido en las Fuerzas Armadas de los Estados Unidos.' },
+        { month: 11, day: 11, en: 'Happy Veterans Day. With gratitude, we honor all who have served in the U.S. Armed Forces.', es: 'Feliz Día de los Veteranos. Con gratitud, honramos a quienes han servido en las Fuerzas Armadas de los Estados Unidos.' },
+        { month: 11, day: 16, en: 'Today in history: The first known observance of a Thanksgiving-style harvest celebration took place in North America.', es: 'Hoy en la historia: se celebró una de las primeras festividades de agradecimiento de cosecha en América del Norte.' },
+        { month: 11, day: 28, en: 'Today in history: Thanksgiving is a time to give thanks for family, friends, and community.', es: 'Hoy en la historia: el Día de Acción de Gracias es un momento para dar gracias por la familia, los amigos y la comunidad.' },
+        { month: 12, day: 7, en: 'Today in history: Pearl Harbor was attacked in 1941, a day of remembrance for service members and civilians.', es: 'Hoy en la historia: Pearl Harbor fue atacado en 1941, un día de recuerdo para miembros del servicio y civiles.' },
+        { month: 12, day: 13, en: 'Today in history: The National Guard traces its roots to 1636.', es: 'Hoy en la historia: la Guardia Nacional remonta sus raíces a 1636.' },
+        { month: 12, day: 20, en: 'Today in history: The U.S. Space Force was established in 2019.', es: 'Hoy en la historia: la Fuerza Espacial de los Estados Unidos se estableció en 2019.' },
+        { month: 12, day: 25, en: 'Today in history: Christmas celebrates the birth of Jesus Christ and the spirit of peace, hope, and goodwill.', es: 'Hoy en la historia: la Navidad celebra el nacimiento de Jesucristo y el espíritu de paz, esperanza y bondad.' },
+        { month: 12, day: 25, en: 'Merry Christmas!', es: '¡Feliz Navidad!' }
+    ];
+
     const getEvents = (year) => {
         const events = [];
         const fixed = (month, day, en, es, category = 'holiday') => {
@@ -45,7 +74,6 @@
             events.push({ date: new Date(year, month - 1, lastWeekday(year, month - 1, dayOfWeek)), en, es, category });
         };
 
-        // U.S. holidays and widely observed seasonal greetings.
         fixed(1, 1, 'Happy New Year!', '¡Feliz Año Nuevo!');
         const election = electionDay(year);
         events.push({ date: election, en: 'Happy Election Day! We encourage every eligible voter to participate.', es: '¡Feliz Día de la Elección! Animamos a cada votante elegible a participar.', category: 'observance' });
@@ -98,20 +126,25 @@
     };
 
     const today = new Date();
-    const todaysEvents = getEvents(today.getFullYear()).filter((event) =>
+    const month = today.getMonth() + 1;
+    const day = today.getDate();
+    const matches = curatedTodayInHistory.filter((entry) => entry.month === month && entry.day === day);
+    const holidays = getEvents(today.getFullYear()).filter((event) =>
         event.date.getFullYear() === today.getFullYear() &&
         event.date.getMonth() === today.getMonth() &&
         event.date.getDate() === today.getDate()
     );
-    if (!todaysEvents.length) return;
 
-    const messages = [...new Set(todaysEvents.map((event) => isSpanish ? event.es : event.en))];
+    const combined = [...matches, ...holidays].map((item) => isSpanish ? item.es : item.en);
+    const unique = [...new Set(combined)];
+    if (!unique.length) return;
+
     const banner = document.createElement('aside');
     banner.className = 'holiday-greeting';
     banner.setAttribute('role', 'status');
     banner.setAttribute('aria-live', 'polite');
     banner.style.cssText = 'background:#f8f6f1;color:#1a2b4a;border-bottom:3px solid #c5a253;text-align:center;padding:14px 20px;font-weight:600;font-size:1.05rem;';
-    banner.textContent = messages.join(' ');
+    banner.textContent = unique.join(' ');
     const header = document.querySelector('.site-header');
     if (header) header.insertAdjacentElement('afterend', banner);
 })();

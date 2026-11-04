@@ -41,9 +41,11 @@
 
         // U.S. holidays and widely observed seasonal greetings.
         fixed(1, 1, 'Happy New Year!', '¡Feliz Año Nuevo!');
+        fixed(11, 5, 'Happy Election Day! We encourage every eligible voter to participate.', '¡Feliz Día de la Elección! Animamos a cada votante elegible a participar.', 'observance');
         weekday(1, 1, 3, 'Happy Martin Luther King Jr. Day.', 'Feliz Día de Martin Luther King Jr.');
         weekday(2, 1, 3, 'Happy Presidents Day.', 'Feliz Día de los Presidentes.');
         fixed(2, 14, 'Happy Valentine’s Day!', '¡Feliz Día de San Valentín!');
+        fixed(2, 3, 'We honor the Four Chaplains and their sacrifice during World War II.', 'Honramos a los Cuatro Capellanes y su sacrificio durante la Segunda Guerra Mundial.', 'military');
         fixed(3, 17, 'Happy St. Patrick’s Day!', '¡Feliz Día de San Patricio!');
         fixed(3, 29, 'We honor and thank our Vietnam War veterans.', 'Honramos y agradecemos a nuestros veteranos de la Guerra de Vietnam.', 'military');
         const easter = easterSunday(year);
@@ -54,6 +56,7 @@
         spouseDay.setDate(spouseDay.getDate() - 7);
         events.push({ date: spouseDay, en: 'We recognize and thank military spouses for their service and support.', es: 'Reconocemos y agradecemos a los cónyuges militares por su servicio y apoyo.', category: 'military' });
         fixed(4, 5, 'We honor Gold Star spouses and the families of the fallen.', 'Honramos a los cónyuges Gold Star y a las familias de los caídos.', 'military');
+        events.push({ date: new Date(year, 3, 1), en: 'April is the Month of the Military Child. We honor military children and families.', es: 'Abril es el Mes del Niño Militar. Honramos a los niños militares y sus familias.', category: 'military-month' });
         fixed(5, 1, 'May is Military Appreciation Month. We honor all who serve and their families.', 'Mayo es el Mes de Agradecimiento a las Fuerzas Armadas. Honramos a quienes sirven y a sus familias.', 'military-month');
         weekday(5, 6, 3, 'Happy Armed Forces Day. Thank you to all who serve on active duty.', 'Feliz Día de las Fuerzas Armadas. Gracias a quienes están en servicio activo.', 'military');
         last(5, 1, 'On Memorial Day, we remember and honor those who gave their lives in service to our country.', 'En el Día de los Caídos, recordamos y honramos a quienes dieron su vida al servicio de nuestro país.', 'military');
@@ -74,8 +77,9 @@
         last(9, 0, 'We honor Gold Star Mothers and families who have lost a loved one in military service.', 'Honramos a las madres y familias Gold Star que han perdido a un ser querido en el servicio militar.', 'military');
         fixed(10, 13, 'Happy U.S. Navy Birthday!', '¡Feliz aniversario de la Armada de los Estados Unidos!', 'military');
         fixed(10, 31, 'Happy Halloween!', '¡Feliz Halloween!');
+        events.push({ date: new Date(year, 10, 1), en: 'November is National Veterans and Military Families Month. We honor veterans, service members, and their families.', es: 'Noviembre es el Mes Nacional de los Veteranos y las Familias Militares. Honramos a los veteranos, miembros del servicio y sus familias.', category: 'military-month' });
         fixed(11, 10, 'Happy U.S. Marine Corps Birthday!', '¡Feliz aniversario del Cuerpo de Marines de los Estados Unidos!', 'military');
-        fixed(11, 11, 'Happy Veterans Day. With gratitude, we honor all who have served in the U.S. Armed Forces.', 'Feliz Día de los Veteranos. Con gratitud, honramos a quienes han servido en las Fuerzas Armadas de los Estados Unidos.', 'military');
+        fixed(11, 11, 'Happy Veterans Day. With gratitude, we honor all who have served in the U.S. Armed Forces.', 'Feliz Día de los Veteranos. Con gratitud, honramos a quienes han servido en la Fuerzas Armadas de los Estados Unidos.', 'military');
         weekday(11, 4, 4, 'Happy Thanksgiving!', '¡Feliz Día de Acción de Gracias!');
         fixed(12, 7, 'We remember and honor those who served and died at Pearl Harbor.', 'Recordamos y honramos a quienes sirvieron y murieron en Pearl Harbor.', 'military');
         fixed(12, 13, 'Happy National Guard Birthday!', '¡Feliz aniversario de la Guardia Nacional!', 'military');
@@ -83,16 +87,10 @@
         fixed(12, 25, 'Merry Christmas!', '¡Feliz Navidad!');
         fixed(12, 31, 'Wishing you a safe and happy New Year’s Eve!', '¡Le deseamos una Nochevieja segura y feliz!');
 
-        // Four Chaplains Day, observed annually on February 3.
-        fixed(2, 3, 'We honor the Four Chaplains and their sacrifice during World War II.', 'Honramos a los Cuatro Capellanes y su sacrificio durante la Segunda Guerra Mundial.', 'military');
-        // Military Appreciation Month and Month of the Military Child are month-long recognitions.
-        events.push({ date: new Date(year, 3, 1), en: 'April is the Month of the Military Child. We honor military children and families.', es: 'Abril es el Mes del Niño Militar. Honramos a los niños militares y sus familias.', category: 'military-month' });
-        events.push({ date: new Date(year, 10, 1), en: 'November is National Veterans and Military Families Month. We honor veterans, service members, and their families.', es: 'Noviembre es el Mes Nacional de los Veteranos y las Familias Militares. Honramos a los veteranos, miembros del servicio y sus familias.', category: 'military-month' });
         return events;
     };
 
     const today = new Date();
-    const todayKey = `${today.getFullYear()}-${today.getMonth()}-${today.getDate()}`;
     const todaysEvents = getEvents(today.getFullYear()).filter((event) =>
         event.date.getFullYear() === today.getFullYear() &&
         event.date.getMonth() === today.getMonth() &&

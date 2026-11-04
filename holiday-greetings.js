@@ -75,16 +75,14 @@
         };
 
         fixed(1, 1, 'Happy New Year!', '¡Feliz Año Nuevo!');
-        const election = electionDay(year);
-        events.push({ date: election, en: 'Happy Election Day! We encourage every eligible voter to participate.', es: '¡Feliz Día de la Elección! Animamos a cada votante elegible a participar.', category: 'observance' });
+        events.push({ date: electionDay(year), en: 'Happy Election Day! We encourage every eligible voter to participate.', es: '¡Feliz Día de la Elección! Animamos a cada votante elegible a participar.', category: 'observance' });
         weekday(1, 1, 3, 'Happy Martin Luther King Jr. Day.', 'Feliz Día de Martin Luther King Jr.');
         weekday(2, 1, 3, 'Happy Presidents Day.', 'Feliz Día de los Presidentes.');
         fixed(2, 14, 'Happy Valentine’s Day!', '¡Feliz Día de San Valentín!');
         fixed(2, 3, 'We honor the Four Chaplains and their sacrifice during World War II.', 'Honramos a los Cuatro Capellanes y su sacrificio durante la Segunda Guerra Mundial.', 'military');
         fixed(3, 17, 'Happy St. Patrick’s Day!', '¡Feliz Día de San Patricio!');
         fixed(3, 29, 'We honor and thank our Vietnam War veterans.', 'Honramos y agradecemos a nuestros veteranos de la Guerra de Vietnam.', 'military');
-        const easter = easterSunday(year);
-        events.push({ date: easter, en: 'Happy Easter!', es: '¡Felices Pascuas!', category: 'holiday' });
+        events.push({ date: easterSunday(year), en: 'Happy Easter!', es: '¡Felices Pascuas!', category: 'holiday' });
         const mothersDay = new Date(year, 4, nthWeekday(year, 4, 0, 2));
         events.push({ date: mothersDay, en: 'Happy Mother’s Day!', es: '¡Feliz Día de las Madres!', category: 'holiday' });
         const spouseDay = new Date(mothersDay);
@@ -98,8 +96,7 @@
         fixed(6, 6, 'We remember the service and sacrifice of those who took part in D-Day.', 'Recordamos el servicio y sacrificio de quienes participaron en el Día D.', 'military');
         fixed(6, 14, 'Happy U.S. Army Birthday and Flag Day!', '¡Feliz aniversario del Ejército de los Estados Unidos y Día de la Bandera!', 'military');
         fixed(6, 19, 'Happy Juneteenth.', 'Feliz Juneteenth.');
-        const fathersDay = new Date(year, 5, nthWeekday(year, 5, 0, 3));
-        events.push({ date: fathersDay, en: 'Happy Father’s Day!', es: '¡Feliz Día del Padre!', category: 'holiday' });
+        events.push({ date: new Date(year, 5, nthWeekday(year, 5, 0, 3)), en: 'Happy Father’s Day!', es: '¡Feliz Día del Padre!', category: 'holiday' });
         fixed(7, 4, 'Happy Independence Day!', '¡Feliz Día de la Independencia!');
         fixed(7, 27, 'We remember Korean War veterans and the anniversary of the armistice.', 'Recordamos a los veteranos de la Guerra de Corea y el aniversario del armisticio.', 'military');
         fixed(8, 4, 'Happy U.S. Coast Guard Birthday!', '¡Feliz aniversario de la Guardia Costera de los Estados Unidos!', 'military');
@@ -121,30 +118,80 @@
         fixed(12, 20, 'Happy U.S. Space Force Birthday!', '¡Feliz aniversario de la Fuerza Espacial de los Estados Unidos!', 'military');
         fixed(12, 25, 'Merry Christmas!', '¡Feliz Navidad!');
         fixed(12, 31, 'Wishing you a safe and happy New Year’s Eve!', '¡Le deseamos una Nochevieja segura y feliz!');
-
         return events;
     };
 
     const today = new Date();
-    const month = today.getMonth() + 1;
-    const day = today.getDate();
-    const matches = curatedTodayInHistory.filter((entry) => entry.month === month && entry.day === day);
+    const matches = curatedTodayInHistory.filter((entry) => entry.month === today.getMonth() + 1 && entry.day === today.getDate());
     const holidays = getEvents(today.getFullYear()).filter((event) =>
         event.date.getFullYear() === today.getFullYear() &&
         event.date.getMonth() === today.getMonth() &&
         event.date.getDate() === today.getDate()
     );
+    const messages = [...new Set([...matches, ...holidays].map((item) => isSpanish ? item.es : item.en))];
+    if (!messages.length) return;
 
-    const combined = [...matches, ...holidays].map((item) => isSpanish ? item.es : item.en);
-    const unique = [...new Set(combined)];
-    if (!unique.length) return;
+    const style = document.createElement('style');
+    style.textContent = `
+        .holiday-greeting {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            max-width: 1100px;
+            margin: 18px auto;
+            padding: 16px 20px;
+            color: #1a2b4a;
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-left: 4px solid #c5a253;
+            border-radius: 10px;
+            box-shadow: 0 2px 12px rgba(0,0,0,.08);
+        }
+        .holiday-greeting-label {
+            flex: 0 0 auto;
+            color: #1a2b4a;
+            font-size: .9rem;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+        .holiday-greeting-message {
+            margin: 0;
+            font-size: 1rem;
+            line-height: 1.5;
+            overflow-wrap: anywhere;
+        }
+        @media (max-width: 600px) {
+            .holiday-greeting {
+                display: block;
+                margin: 12px 12px;
+                padding: 14px 16px;
+                border-left-width: 4px;
+            }
+            .holiday-greeting-label {
+                display: block;
+                margin-bottom: 4px;
+                font-size: .82rem;
+                letter-spacing: .03em;
+                text-transform: uppercase;
+            }
+            .holiday-greeting-message { font-size: .95rem; }
+        }
+    `;
+    document.head.appendChild(style);
 
     const banner = document.createElement('aside');
     banner.className = 'holiday-greeting';
     banner.setAttribute('role', 'status');
     banner.setAttribute('aria-live', 'polite');
-    banner.style.cssText = 'background:#f8f6f1;color:#1a2b4a;border-bottom:3px solid #c5a253;text-align:center;padding:14px 20px;font-weight:600;font-size:1.05rem;';
-    banner.textContent = unique.join(' ');
+
+    const label = document.createElement('strong');
+    label.className = 'holiday-greeting-label';
+    label.textContent = isSpanish ? 'Hoy en la historia' : 'Today in History';
+    const message = document.createElement('p');
+    message.className = 'holiday-greeting-message';
+    message.textContent = messages.join(' ');
+    banner.append(label, message);
+
     const header = document.querySelector('.site-header');
     if (header) header.insertAdjacentElement('afterend', banner);
 })();
